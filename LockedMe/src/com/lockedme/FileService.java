@@ -30,9 +30,7 @@ public class FileService {
 	}
 	public void addFile(String fileName) throws IOException {		//Method to add a new file to the directory
 		File f=new File("E://Lockedme.com//"+fileName+".txt");
-		f.createNewFile();
-		boolean y=f.delete();
-		System.out.println(y);
+		f.createNewFile();		
 	}
 	public boolean deleteFile(String fileName)   //Method to delete a specific file
 	{
