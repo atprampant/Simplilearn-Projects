@@ -35,6 +35,9 @@ public class OrderService {
     UserRepository userRepository;
 
     @Autowired
+    UserService userService;
+
+    @Autowired
     ShoeRepository shoeRepository;
 
     @Autowired
@@ -46,7 +49,7 @@ public class OrderService {
         item.setShoes(shoe);
         item.setQuantity(orderItemsDto.getQuantity());
         order.addOrderItems(item);
-        Users user=userRepository.findByUsername(orderItemsDto.getUsername());
+        Users user=userService.getUserByUsername(orderItemsDto.getUsername());
         order.setUser(user);
         shoe.setQuantityAvailable(shoe.getQuantityAvailable()-orderItemsDto.getQuantity());
 
@@ -95,4 +98,7 @@ public class OrderService {
         return order.get();
     }
 
+    public List<Orders> getAllOrders(){
+        return orderRepository.findAll();
+    }
 }

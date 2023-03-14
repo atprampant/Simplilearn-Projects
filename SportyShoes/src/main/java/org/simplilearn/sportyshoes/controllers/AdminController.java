@@ -55,14 +55,16 @@ public class AdminController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> loginAdmin(@RequestBody AdminLoginDto adminLoginDto){
-        Admin admin=modelMapper.map(adminLoginDto, Admin.class);
-        Admin loginAdmin=adminRepository.findByUsername(admin.getUsername());
-        if(adminLoginDto.getPassword().equals(loginAdmin.getPassword())){
-        ApiResponse apiResponse=new ApiResponse(HttpStatus.OK,LOGIN_SUCCESSFUL);
-        return new ResponseEntity<>(apiResponse,HttpStatus.OK);}
-        else{
-        ApiResponse apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST,LOGIN_FAILED);
-        return new ResponseEntity<>(apiResponse,HttpStatus.BAD_REQUEST);
+        boolean login=false;
+        login= adminService.validateAdminLogin(adminLoginDto);
+        if(login)
+        {
+            ApiResponse apiResponse=new ApiResponse(HttpStatus.OK,LOGIN_SUCCESSFUL);
+            return new ResponseEntity<>(apiResponse,HttpStatus.OK);}
+        else
+        {
+            ApiResponse apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST,LOGIN_FAILED);
+            return new ResponseEntity<>(apiResponse,HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -71,7 +73,7 @@ public class AdminController {
         return new ResponseEntity<Orders>(orderService.getAllByDate(orderSearchDto.getInputDate()),HttpStatus.OK);
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/username/{username}")
     public ResponseEntity<Users> getUserByUsername(@PathVariable String username){
         return new ResponseEntity<Users>(userService.getUserByUsername(username),HttpStatus.OK);
     }
@@ -85,7 +87,13 @@ public class AdminController {
     public ResponseEntity<List<Shoes>> getAllShoes(){
         return new ResponseEntity<List<Shoes>>(shoeService.getAllShoes(),HttpStatus.OK);
     }
+    @GetMapping("/users")
     public ResponseEntity<List<Users>> getAllUsers(){
         return new ResponseEntity<List<Users>>(userService.getAllUsers(),HttpStatus.OK);
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<List<Orders>> getAllOrders(){
+        return new ResponseEntity<List<Orders>>(orderService.getAllOrders(),HttpStatus.OK);
     }
 }
